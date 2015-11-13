@@ -2,8 +2,9 @@ package com.segment.analytics.android.integrations.bugsnag;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
-import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Client;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Traits;
 import com.segment.analytics.ValueMap;
@@ -12,47 +13,44 @@ import com.segment.analytics.test.IdentifyPayloadBuilder;
 import com.segment.analytics.test.ScreenPayloadBuilder;
 import com.segment.analytics.test.TrackPayloadBuilder;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static com.segment.analytics.Utils.createTraits;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 18, manifest = Config.NONE)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@PrepareForTest(Bugsnag.class)
 public class BugsnagTest {
-  @Rule public PowerMockRule rule = new PowerMockRule();
   @Mock Application context;
   @Mock Analytics analytics;
+  @Mock Client client;
   BugsnagIntegration integration;
 
   @Before public void setUp() {
     initMocks(this);
-    PowerMockito.mockStatic(Bugsnag.class);
+    BugsnagIntegration.Provider provider = new BugsnagIntegration.Provider() {
+      @Override public Client get(Context context, String apiKey) {
+        return client;
+      }
+    };
     when(analytics.getApplication()).thenReturn(context);
 
-    integration = new BugsnagIntegration(analytics, new ValueMap().putValue("apiKey", "foo"));
-    // Twice so we can initialize mocks for tests, but reset the mock after initialization.
-    PowerMockito.mockStatic(Bugsnag.class);
+    integration =
+        new BugsnagIntegration(provider, analytics, new ValueMap().putValue("apiKey", "foo"));
   }
 
   @Test public void initialize() throws IllegalStateException {
-    integration = new BugsnagIntegration(analytics, new ValueMap().putValue("apiKey", "foo"));
-    verifyStatic();
-    Bugsnag.init(context, "foo");
+    BugsnagIntegration.Provider provider = mock(BugsnagIntegration.Provider.class);
+    ValueMap settings = new ValueMap().putValue("apiKey", "foo");
+    integration = new BugsnagIntegration(provider, analytics, settings);
+    verify(provider).get(context, "foo");
   }
 
   @Test public void activityCreate() {
@@ -60,32 +58,25 @@ public class BugsnagTest {
     when(activity.getLocalClassName()).thenReturn("foo");
     Bundle bundle = mock(Bundle.class);
     integration.onActivityCreated(activity, bundle);
-    verifyStatic();
-    Bugsnag.setContext("foo");
+    verify(client).setContext("foo");
   }
 
   @Test public void identify() {
     Traits traits = createTraits("foo").putEmail("bar").putName("baz");
     integration.identify(new IdentifyPayloadBuilder().traits(traits).build());
-    verifyStatic();
-    Bugsnag.setUser("foo", "bar", "baz");
-    verifyStatic();
-    Bugsnag.addToTab("User", "userId", "foo");
-    verifyStatic();
-    Bugsnag.addToTab("User", "email", "bar");
-    verifyStatic();
-    Bugsnag.addToTab("User", "name", "baz");
+    verify(client).setUser("foo", "bar", "baz");
+    verify(client).addToTab("User", "userId", "foo");
+    verify(client).addToTab("User", "email", "bar");
+    verify(client).addToTab("User", "name", "baz");
   }
 
   @Test public void track() {
     integration.track(new TrackPayloadBuilder().event("foo").build());
-    verifyStatic();
-    Bugsnag.leaveBreadcrumb("foo");
+    verify(client).leaveBreadcrumb("foo");
   }
 
   @Test public void screen() {
     integration.screen(new ScreenPayloadBuilder().name("foo").build());
-    verifyStatic();
-    Bugsnag.leaveBreadcrumb("Viewed foo Screen");
+    verify(client).leaveBreadcrumb("Viewed foo Screen");
   }
 }
