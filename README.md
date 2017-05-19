@@ -6,6 +6,34 @@ analytics-android-integration-bugsnag
 
 Bugsnag integration for [analytics-android](https://github.com/segmentio/analytics-android).
 
+## Installation
+
+To install the Segment-Bugsnag integration, simply add this line to your gradle file:
+
+```
+compile 'com.segment.analytics.android.integrations:bugsnag:+'
+```
+
+## Usage
+
+After adding the dependency, you must register the integration with our SDK.  To do this, import the Bugsnag integration:
+
+
+```
+import com.segment.analytics.android.integrations.bugsnag.BugsnagIntegration;
+```
+
+And add the following line:
+
+```
+analytics = new Analytics.Builder(this, "write_key")
+                .use(BugsnagIntegration Factory)  
+                .build();
+```
+
+Please see [our documentation](https://segment.com/docs/integrations/bugsnag/) for more information.
+
+
 ## License
 
 ```
