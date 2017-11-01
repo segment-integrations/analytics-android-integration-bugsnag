@@ -22,15 +22,18 @@ import java.util.Map;
  * @see <a href="https://github.com/bugsnag/bugsnag-android">Bugsnag Android SDK</a>
  */
 public class BugsnagIntegration extends Integration<Client> {
-  public static final Factory FACTORY = new Factory() {
-    @Override public Integration<?> create(ValueMap settings, Analytics analytics) {
-      return new BugsnagIntegration(Provider.REAL, analytics, settings);
-    }
+  public static final Factory FACTORY =
+      new Factory() {
+        @Override
+        public Integration<?> create(ValueMap settings, Analytics analytics) {
+          return new BugsnagIntegration(Provider.REAL, analytics, settings);
+        }
 
-    @Override public String key() {
-      return BUGSNAG_KEY;
-    }
-  };
+        @Override
+        public String key() {
+          return BUGSNAG_KEY;
+        }
+      };
   private static final String BUGSNAG_KEY = "Bugsnag";
 
   private final Client client;
@@ -38,27 +41,32 @@ public class BugsnagIntegration extends Integration<Client> {
   interface Provider {
     Client get(Context context, String apiKey);
 
-    Provider REAL = new Provider() {
-      @Override public Client get(Context context, String apiKey) {
-        return new Client(context, apiKey);
-      }
-    };
+    Provider REAL =
+        new Provider() {
+          @Override
+          public Client get(Context context, String apiKey) {
+            return new Client(context, apiKey);
+          }
+        };
   }
 
   BugsnagIntegration(Provider provider, Analytics analytics, ValueMap settings) {
     client = provider.get(analytics.getApplication(), settings.getString("apiKey"));
   }
 
-  @Override public Client getUnderlyingInstance() {
+  @Override
+  public Client getUnderlyingInstance() {
     return client;
   }
 
-  @Override public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+  @Override
+  public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
     super.onActivityCreated(activity, savedInstanceState);
     client.setContext(activity.getLocalClassName());
   }
 
-  @Override public void identify(IdentifyPayload identify) {
+  @Override
+  public void identify(IdentifyPayload identify) {
     super.identify(identify);
     Traits traits = identify.traits();
     client.setUser(traits.userId(), traits.email(), traits.name());
@@ -68,12 +76,14 @@ public class BugsnagIntegration extends Integration<Client> {
     }
   }
 
-  @Override public void screen(ScreenPayload screen) {
+  @Override
+  public void screen(ScreenPayload screen) {
     super.screen(screen);
     client.leaveBreadcrumb(String.format("Viewed %s Screen", screen.event()));
   }
 
-  @Override public void track(TrackPayload track) {
+  @Override
+  public void track(TrackPayload track) {
     super.track(track);
     client.leaveBreadcrumb(track.event());
   }
