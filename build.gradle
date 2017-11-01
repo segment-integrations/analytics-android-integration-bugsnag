@@ -5,13 +5,10 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.0'
-    classpath 'com.f2prateek.checkstyle:checkstyle:1.0.1'
   }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'checkstyle'
-apply plugin: 'com.f2prateek.checkstyle'
 
 android {
   compileSdkVersion 25
@@ -32,10 +29,6 @@ android {
     // Okio https://cloudup.com/cp7bi10o2C3g
     disable 'InvalidPackage'
   }
-}
-
-checkstyle {
-  configFile rootProject.file('gradle/checkstyle.xml')
 }
 
 dependencies {
