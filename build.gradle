@@ -7,9 +7,13 @@ buildscript {
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.0'
     classpath 'com.f2prateek.javafmt:javafmt:0.1.6'
+    classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0'
     classpath 'com.bugsnag:bugsnag-android-gradle-plugin:4.7.5'
   }
 }
+
+// Use -Prelease or $ORG_GRADLE_PROJECT_RELEASE="true" to mark the project as a release
+ext.isRelease = hasProperty('release')
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.f2prateek.javafmt'
@@ -33,6 +37,7 @@ android {
   lintOptions {
     // Okio https://cloudup.com/cp7bi10o2C3g
     disable 'InvalidPackage'
+    abortOnError false
   }
 }
 
@@ -59,7 +64,9 @@ dependencies {
 }
 
 apply from: rootProject.file('gradle/attach-jar.gradle')
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle/upload.gradle')
+apply from: rootProject.file('gradle/sign.gradle')
+apply from: rootProject.file('gradle/promote.gradle')
 
 repositories {
   maven { url 'https://maven.google.com/' }
