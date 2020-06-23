@@ -3,7 +3,7 @@ jobs:
   build:
     resource_class: small
     docker:
-      - image: circleci/android:api-25-alpha
+      - image: circleci/android:api-26
         environment:
           ANDROID_HOME: /home/circleci/android
           CIRCLE_JDK_VERSION: oraclejdk8
@@ -30,7 +30,7 @@ jobs:
             - /home/circleci/android
             - /home/circleci/.gradle
             - /usr/local/android-sdk-linux/platforms/android-25
-            - /usr/local/android-sdk-linux/build-tools/25.0.0
+            - /usr/local/android-sdk-linux/build-tools/27.0.3
             - /usr/local/android-sdk-linux/extras/android/m2repository
       - store_artifacts:
           path: analytics-core/build/test-report
