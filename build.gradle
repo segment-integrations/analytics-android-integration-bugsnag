@@ -1,7 +1,8 @@
 buildscript {
   repositories {
     mavenCentral()
-    maven { url 'https://maven.google.com/' }
+    jcenter()
+    google()
   }
 
   dependencies {
@@ -21,7 +22,7 @@ apply plugin: 'com.bugsnag.android.gradle'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion '27.0.3'
+  buildToolsVersion '28.0.3'
 
   defaultConfig {
     minSdkVersion 14
@@ -44,6 +45,8 @@ android {
 dependencies {
   repositories {
     mavenCentral()
+    jcenter()
+    google()
   }
 
   compileOnly 'com.segment.analytics.android:analytics:4.0.0'
@@ -67,7 +70,3 @@ apply from: rootProject.file('gradle/attach-jar.gradle')
 apply from: rootProject.file('gradle/upload.gradle')
 apply from: rootProject.file('gradle/sign.gradle')
 apply from: rootProject.file('gradle/promote.gradle')
-
-repositories {
-  maven { url 'https://maven.google.com/' }
-}
