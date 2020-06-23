@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+
 import com.bugsnag.android.Client;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Traits;
@@ -12,11 +13,11 @@ import com.segment.analytics.core.tests.BuildConfig;
 import com.segment.analytics.test.IdentifyPayloadBuilder;
 import com.segment.analytics.test.ScreenPayloadBuilder;
 import com.segment.analytics.test.TrackPayloadBuilder;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -66,9 +67,9 @@ public class BugsnagTest {
     Traits traits = createTraits("foo").putEmail("bar").putName("baz");
     integration.identify(new IdentifyPayloadBuilder().traits(traits).build());
     verify(client).setUser("foo", "bar", "baz");
-    verify(client).addToTab("User", "userId", "foo");
-    verify(client).addToTab("User", "email", "bar");
-    verify(client).addToTab("User", "name", "baz");
+    verify(client).addMetadata("User", "userId", "foo");
+    verify(client).addMetadata("User", "email", "bar");
+    verify(client).addMetadata("User", "name", "baz");
   }
 
   @Test public void track() {

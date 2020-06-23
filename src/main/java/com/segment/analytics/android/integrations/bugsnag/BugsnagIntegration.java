@@ -72,7 +72,7 @@ public class BugsnagIntegration extends Integration<Client> {
     client.setUser(traits.userId(), traits.email(), traits.name());
     final String userKey = "User";
     for (Map.Entry<String, Object> entry : traits.entrySet()) {
-      client.addToTab(userKey, entry.getKey(), entry.getValue());
+      client.addMetadata(userKey, entry.getKey(), entry.getValue());
     }
   }
 
