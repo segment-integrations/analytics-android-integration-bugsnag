@@ -1,3 +1,9 @@
+Version 2.1.0 (24th June, 2020)
+==================================
+*(Supports analytics-android 4.0.+ and Bugsnag 5.0.0)*
+
+  * Bumps Bugsnag dependency to 5.0.0
+
 Version 2.0.0 (8th November, 2017)
 ==================================
 *(Supports analytics-android 4.0.+ and Bugsnag 4.1.3+)*
