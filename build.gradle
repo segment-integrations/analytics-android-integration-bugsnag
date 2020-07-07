@@ -6,7 +6,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath 'com.android.tools.build:gradle:4.0.0'
     classpath 'com.f2prateek.javafmt:javafmt:0.1.6'
     classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0'
     classpath 'com.bugsnag:bugsnag-android-gradle-plugin:4.7.5'
@@ -22,7 +22,7 @@ apply plugin: 'com.bugsnag.android.gradle'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion '28.0.3'
+  buildToolsVersion '29.0.2'
 
   defaultConfig {
     minSdkVersion 14
@@ -36,8 +36,6 @@ android {
   }
 
   lintOptions {
-    // Okio https://cloudup.com/cp7bi10o2C3g
-    disable 'InvalidPackage'
     abortOnError false
   }
 }
